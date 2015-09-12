@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="smartlock.iot.android.iot_smart.activity.HomeFragment">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="horizontal">
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/lockbutton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="#3F51B5"
+            android:layout_marginRight="50dp"
+            android:text="LOCK"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:onClick="lockbuttonOnClick"/>
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/unlockbutton"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="#3F51B5"
+            android:text="UNLOCK"
+            android:layout_weight="2"
+            android:clickable="true"
+            android:onClick="unlockbuttonOnClick"/>
+
+    </LinearLayout>
+</RelativeLayout>

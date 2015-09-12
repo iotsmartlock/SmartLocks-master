@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/signup"
+    android:theme="@style/AppTheme"
+    android:background="#1a237e">
+
+    <EditText android:id="@+id/Email"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:text=""
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="121dp"
+        android:hint="Username"
+        android:layout_alignParentTop="true"
+        android:background="#FFFFFFFF"
+        android:layout_alignParentEnd="true"
+        android:textSize="20dp"
+        android:textStyle="normal|italic"
+        android:textColor="#686868" />
+
+    <EditText
+        android:id="@+id/Password"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:text=""
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/Email"
+        android:autoText="false"
+        android:hint="Password"
+        android:background="#FFFFFF"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="5dp"
+        android:textSize="20dp"
+        android:textStyle="normal|italic"
+        android:password="true"
+        android:textColor="#686868" />
+
+
+    <com.gc.materialdesign.views.ButtonRectangle
+        android:id="@+id/btnRegister"
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/register"
+        android:textStyle="normal"
+        android:background="@color/myPrimaryColor"
+        android:textColor="#ffffffff"
+        android:elevation="10dp"
+        android:elegantTextHeight="true"
+        android:ellipsize="end"
+        android:clickable="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:touchscreenBlocksFocus="true"
+        android:layout_below="@+id/Password"
+        android:layout_alignEnd="@+id/Password"
+        android:layout_marginTop="25dp" />
+
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btn_sign_in"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="71dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:elevation="10dp"
+        android:layout_below="@+id/btnRegister"
+        android:layout_alignParentStart="true" />
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/fbbutton"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:elevation="10dp"
+        android:paddingLeft="35dp"
+        android:paddingRight="35dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignTop="@+id/btn_sign_in"
+        android:layout_alignParentEnd="true"
+        android:layout_alignBottom="@+id/btn_sign_in"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp" />
+
+</RelativeLayout>
