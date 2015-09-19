@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     android:theme="@style/AppTheme"
-    android:background="#1a237e"
+    android:background="@color/myPrimaryColor"
     tools:context="smartlock.iot.android.iot_smart.activity.Slash_Screen">
 
     <TextView

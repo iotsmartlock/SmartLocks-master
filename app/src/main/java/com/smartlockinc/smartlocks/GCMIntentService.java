@@ -38,7 +38,7 @@ public class GCMIntentService extends IntentService{
         // TODO Auto-generated method stub
         Bundle extras = intent.getExtras();
         String msg = intent.getStringExtra("message");
-        Log.i(TAG, msg);
+        Log.i(TAG,""+ msg);
        /* try {
             json = new JSONObject(msg);
             name = json.getString("name");

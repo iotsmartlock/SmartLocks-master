@@ -6,8 +6,7 @@ package com.smartlockinc.smartlocks;
     import android.content.ContextWrapper;
     import android.content.DialogInterface;
 
-    import com.gc.materialdesign.views.ButtonRectangle;
-    import com.gc.materialdesign.views.CustomView;
+    import com.rey.material.widget.*;
 
     import android.content.Intent;
     import android.content.IntentSender;
@@ -18,19 +17,30 @@ package com.smartlockinc.smartlocks;
     import android.graphics.BitmapFactory;
     import android.graphics.drawable.Drawable;
     import android.os.AsyncTask;
+    import android.os.Build;
     import android.os.Bundle;
     import android.os.Environment;
+    import android.support.design.widget.Snackbar;
+    import android.support.design.widget.TextInputLayout;
     import android.support.v4.app.Fragment;
+
+    import android.text.Editable;
+    import android.text.TextWatcher;
     import android.util.Base64;
     import android.util.Log;
+    import com.rey.material.widget.*;
     import android.view.LayoutInflater;
     import android.view.View;
     import android.view.View.OnClickListener;
     import android.view.ViewGroup;
+    import android.view.Window;
+    import android.view.WindowManager;
+    import android.view.inputmethod.InputMethodManager;
     import android.widget.Button;
     import android.widget.EditText;
     import android.widget.ImageView;
     import android.widget.LinearLayout;
+    import android.widget.RelativeLayout;
     import android.widget.Toast;
 
     import com.facebook.GraphRequest;
@@ -67,15 +77,20 @@ package com.smartlockinc.smartlocks;
     import java.io.InputStream;
     import java.security.MessageDigest;
     import java.security.NoSuchAlgorithmException;
+    import java.util.regex.Matcher;
+    import java.util.regex.Pattern;
+
     import com.squareup.picasso.Target;
 
     import static com.smartlockinc.smartlocks.CommonUtilities.*;
+
 
     /**
      * Created by SunnySingh on 7/5/2015.
      */
     public class Signupstartup extends Activity implements View.OnClickListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
         AlertDialogueManager alert = new AlertDialogueManager();
+        private RelativeLayout mroot;
         private GoogleApiClient mGoogleApiClient;
         private CallbackManager callbackmanager;
         private LoginButton fbbutton;
@@ -83,15 +98,25 @@ package com.smartlockinc.smartlocks;
         private boolean mIntentInProgress;
         private ConnectionResult mConnectionResult;
         private SignInButton signinButton;
+        private boolean isValidEmail(String emailInput) {
+            String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+
+            Pattern pattern = Pattern.compile(EMAIL_PATTERN);
+            Matcher matcher = pattern.matcher(emailInput);
+            return matcher.matches();
+        }
+
         ConnectionDetector cd;
         SessionManager session;
         EditText password;
         photourl uri;
         EditText email;
+        String ValidEmail;
         static String Emailid;
         static String Password;
         Context mcontext;
-        ButtonRectangle register;
+        com.rey.material.widget.Button register;
         private static int RC_FB_SIGN_IN;
 
 
@@ -100,8 +125,24 @@ package com.smartlockinc.smartlocks;
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            if(Build.VERSION.SDK_INT>=21)
+            {
+                Window window =getWindow();
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.setStatusBarColor(getResources().getColor(R.color.myPrimaryDarkColor));
+            }
             FacebookSdk.sdkInitialize(getApplicationContext());
             setContentView(R.layout.signup);
+
+            mroot=(RelativeLayout) findViewById(R.id.signup);
+            final TextInputLayout et1= (TextInputLayout) findViewById(R.id.et1);
+            final TextInputLayout et2 = (TextInputLayout) findViewById(R.id.et2);
+
+            et1.setHint("Username");
+
+            et2.setHint("Password");
+
             mcontext = getApplicationContext();
 
             fbbutton = (LoginButton) findViewById(R.id.fbbutton);
@@ -131,24 +172,62 @@ package com.smartlockinc.smartlocks;
             mGoogleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this).addOnConnectionFailedListener(this).addApi(Plus.API, Plus.PlusOptions.builder().build()).addScope(Plus.SCOPE_PLUS_LOGIN).build();
 
 
-            email = (EditText) findViewById(R.id.Email);
-            password = (EditText) findViewById(R.id.Password);
-            register = (ButtonRectangle) findViewById(R.id.btnRegister);
+            email = (EditText)findViewById(R.id.Email);
+            ValidEmail=email.getText().toString().trim();
+            password =(EditText) findViewById(R.id.Password);
+            register = (com.rey.material.widget.Button) findViewById(R.id.btnRegister);
 
-            register.setOnClickListener(new CustomView.OnClickListener() {
+            register.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Password = password.getText().toString();
                     Emailid = email.getText().toString();
+                    ValidEmail=email.getText().toString().trim();
+                    InputMethodManager imm=(InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),0);
 
                     if (Password.equals("") && Emailid.equals("")) {
-                        alert.ShowALert(Signupstartup.this, "Registering Error", "Please Enter Valid Details", false);
+                        final Snackbar snackbar = Snackbar.make(mroot, "One or More Fields are Empty", Snackbar.LENGTH_SHORT);
+                        snackbar.setAction("Dismiss", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                snackbar.dismiss();
+                            }
+                        });
+                        snackbar.show();
+                    }
+                    else if (Password.equals("") && !Emailid.equals(""))
+                    {
+                        et2.setError("Password Cannot be Empty");
+                        et1.setError(null);
 
-                    } else {
-                        session = new SessionManager(mcontext);
-                        session.atlogin(Emailid, Password);
-                        Intent i = new Intent(mcontext, MainActivity.class);
-                        startActivity(i);
-                        finish();
+                    }
+
+                    else if (!Password.equals("") && Emailid.equals(""))
+                    {
+                        et1.setError("Email Cannot be Empty");
+                        et2.setError(null);
+
+                    }
+                    else {
+                        if(!isValidEmail(ValidEmail))
+                        {
+                            final Snackbar msnackbar = Snackbar.make(mroot, "Invalid Email Address", Snackbar.LENGTH_SHORT);
+                            msnackbar.setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    msnackbar.dismiss();
+                                }
+                            });
+                            msnackbar.show();
+                        }
+                        else {
+
+                            session = new SessionManager(mcontext);
+                            session.atlogin(Emailid, Password);
+                            Intent i = new Intent(mcontext, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
                     }
                 }
 
